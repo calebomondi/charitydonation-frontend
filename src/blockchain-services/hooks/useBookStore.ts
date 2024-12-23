@@ -1,6 +1,6 @@
 import { useReadContract } from 'wagmi'
 
-import bookStoreABI from '../blockchain-services/abi/BookStore.json'
+import bookStoreABI from '../abi/BookStore.json'
 
 const CONTRACT_ADDRESS = '0x6589252bf0565D8C34a6E378606B8Af5f40927d8'
 

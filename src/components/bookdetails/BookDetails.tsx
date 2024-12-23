@@ -1,6 +1,6 @@
 // BookDetails.tsx
 import React from "react";
-import { useGetBook } from "../../hooks/useBookStore";
+import { useGetBook } from "../../blockchain-services/hooks/useBookStore";
 
 interface BookDetailsProps {
   bookId: number;

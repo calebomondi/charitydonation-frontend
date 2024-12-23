@@ -9,7 +9,7 @@ function App() {
   return (
     <>
       <div>
-        <h2>Account</h2>
+        <h2 className='font-mono text-red-600'>Account</h2>
 
         <div>
           status: {account.status}
