@@ -31,7 +31,7 @@ export function useGetBook(bookId: number) {
         price: Number(typedData[2]),
         stock: Number(typedData[3]),
         isAvailable: typedData[4],
-        }
+      }
     : null;
   
     return { book, isError, isLoading };
