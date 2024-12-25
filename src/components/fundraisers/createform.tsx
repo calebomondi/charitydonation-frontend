@@ -13,6 +13,7 @@ export function CreateCampaignForm() {
     createCampaign, 
     isLoading, 
     isSuccess, 
+    transactionHash,
     error,
     isEventReceived,
     campaignData
@@ -122,6 +123,11 @@ export function CreateCampaignForm() {
             <p>Target Amount: {campaignData.targetAmount} ETH</p>
             <p>Deadline: {campaignData.deadline}</p>
           </div>
+        </div>
+      )}
+      {isSuccess && (
+        <div>
+          <p>Transanction Hash : {transactionHash}</p>
         </div>
       )}
     </div>
