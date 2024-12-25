@@ -1,5 +1,4 @@
-{
-    "abi": [
+export const abi =  [
         {
            "anonymous":false,
            "inputs":[
@@ -842,5 +841,4 @@
            "stateMutability":"view",
            "type":"function"
         }
-     ]
-}
+]
