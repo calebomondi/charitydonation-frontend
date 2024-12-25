@@ -1,27 +1,21 @@
 import { useViewCampaigns } from "../../blockchain-services/hooks/useCharityDonation"
-import { useEffect, useState } from "react"
-import { CampaignDataArgs } from "../../types";
+
 
 export default function ViewMyCampaigns() {
-    const { getCampaigns } = useViewCampaigns()
-    const [campaigns, setCampaigns] = useState<CampaignDataArgs[]>([]);
-
-    useEffect(() => {
-        async function fetchCampaigns() {
-        const campaignsData = await getCampaigns();
-        setCampaigns(campaignsData);
-        }
-        fetchCampaigns();
-    }, [getCampaigns]);
+    const { campaigns, isError, isLoading } = useViewCampaigns()
+    
+    if (isLoading) return <p>Loading...</p>
+    if (isError) return <p>Error fetching campaigns</p>
 
   return (
-    <div>
+    <div className="">
       {campaigns.map((campaign) => (
-        <div key={campaign.campaignId}>
+        <div key={campaign.campaign_id}>
           <h2>{campaign.title}</h2>
           <p>{campaign.description}</p>
-          <p>Target: {campaign.targetAmount.toString()}</p>
-          <p>Deadline: {campaign.deadline}</p>
+          <div>Target: {campaign.targetAmount}</div>
+          <div>Raised: {campaign.raisedAmount}</div>
+          <div>Deadline: {campaign.deadline}</div>
         </div>
       ))}
     </div>

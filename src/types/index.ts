@@ -14,14 +14,14 @@ export interface CampaignCreatedEvent {
 }
 
 export interface CampaignDataArgs {
-    campaignId: number
-    title: string
-    description: string
-    campaignAddress: string
-    targetAmount: bigint
-    raisedAmount: bigint
-    balance: bigint
-    deadline: string
-    isCompleted: boolean
-    isCancelled: boolean
+    campaign_id: bigint;
+    title: string;
+    description: string;
+    campaignAddress: string;
+    targetAmount: bigint;
+    raisedAmount: bigint;
+    balance: bigint;
+    deadline: bigint;
+    isCompleted: boolean;
+    isCancelled: boolean;
 }

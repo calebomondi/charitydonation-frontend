@@ -3,7 +3,8 @@ import {
   useReadContract,
   useTransaction, 
   useWatchContractEvent,
-  usePublicClient
+  usePublicClient,
+  useAccount
 } from 'wagmi'
 import { parseEther, formatEther, decodeEventLog } from 'viem'
 import { useState } from 'react'
@@ -158,19 +159,39 @@ export function useCreateCampaign() {
 }
 
 export function useViewCampaigns() {
+  const {address} = useAccount()
 
-  const getCampaigns = async (): Promise<CampaignDataArgs[]> => {
-    const { data } = await useReadContract({
-      address: CONTRACT_ADDRESS,
-      abi: charityABI.abi,
-      functionName: 'viewCampaigns',
-      args: [],
-    })
+  const { data, isError, isLoading } = useReadContract({
+    address: CONTRACT_ADDRESS,
+    abi: charityABI.abi,
+    functionName: 'viewCampaigns',
+    account: address
+  });
 
-    return data as CampaignDataArgs[]
+  console.log('Campaigns:', data)
+
+  if (isError) {
+    console.error('Error fetching campaigns:', data)
+    throw new Error('Failed to fetch campaigns')
   }
 
+  const campaigns = Array.isArray(data) 
+  ? data.map((campaign: CampaignDataArgs) => ({
+    campaign_id: Number(campaign.campaign_id),
+    title: campaign.title,
+    description: campaign.description,
+    campaignAddress: campaign.campaignAddress,
+    targetAmount: formatEther(campaign.targetAmount),
+    raisedAmount: formatEther(campaign.raisedAmount),
+    balance: formatEther(campaign.balance),
+    deadline: new Date(Number(campaign.deadline) * 1000).toLocaleString(),
+    isCompleted: campaign.isCompleted,
+    isCancelled: campaign.isCancelled
+  })) : [];
+
   return {
-    getCampaigns
+    campaigns,
+    isError,
+    isLoading
   }
 }
