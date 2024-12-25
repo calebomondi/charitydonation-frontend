@@ -37,7 +37,7 @@ export function useCreateCampaign() {
   } = useTransaction({
     hash,
   })
-
+  /*
   // Watch for CampaignCreated events
   useWatchContractEvent({
     address: CONTRACT_ADDRESS,
@@ -75,6 +75,48 @@ export function useCreateCampaign() {
         setIsEventReceived(true);
       } catch (error) {
         console.error('Error decoding event log:', error);
+      }
+    },
+  });
+  */
+
+  useWatchContractEvent({
+    address: CONTRACT_ADDRESS,
+    abi: charityABI.abi,
+    eventName: 'CampaignCreated',
+    onLogs(logs) {
+      if (!logs.length) return;
+      
+      try {
+        const decodedLog = decodeEventLog({
+          abi: charityABI.abi,
+          eventName: 'CampaignCreated',
+          data: logs[0].data,
+          topics: logs[0].topics,
+        });
+
+        if (!decodedLog?.args) {
+          console.error('Missing event args');
+          return;
+        }
+
+        console.log('Decoded Log:', decodedLog.args);
+
+        const [campaign_id, campaignAddress, title, targetAmount, deadline] = decodedLog.args;
+
+        const event: CampaignCreatedEvent = {
+          campaign_id: BigInt(campaign_id as string | number),
+          campaignAddress: campaignAddress as string,
+          title: title as string,
+          targetAmount: targetAmount as bigint,
+          deadline: deadline as bigint,
+        };
+
+        console.log('Campaign Created Event:', event);
+        setCampaignCreatedEvent(event);
+        setIsEventReceived(true);
+      } catch (error) {
+        console.error('Error decoding event:', error);
       }
     },
   });
