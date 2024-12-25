@@ -1,6 +1,29 @@
+import { useDisconnect, useAccount } from 'wagmi'
+import {useNavigate} from 'react-router-dom'
 import { Link } from "react-router-dom"
+import { useEffect, useState } from 'react'
 
 export default function NavBar() {
+    const navigate = useNavigate()
+    const account = useAccount()
+    const { disconnect } = useDisconnect()
+
+    const [shortAddress, setShortAddress] = useState<string>('')
+
+    useEffect(() => {
+        if (account.status === 'disconnected') {
+            navigate('/')
+        }
+        if (account.addresses) {
+            setShortAddress(`${account.addresses.toString().slice(0, 6)}...${account.addresses.toString().slice(-4)}`)  
+        }
+    }, [account.status]);
+
+    //disconnect the user and navigate to the home page
+    const handleDisconnect = () => {
+        disconnect()
+        navigate('/')
+    }
     
   return (
     <div className="navbar bg-base-100">
@@ -70,10 +93,10 @@ export default function NavBar() {
                     className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-4 w-auto p-3 shadow"
                 >
                     <li className="h-6 m-1 p-1 flex justify-center items-center text-base">
-                        0x763...b123
+                        {shortAddress}
                     </li>
                     <li className="h-6 m-1 p-1 flex justify-center items-center">
-                        <button className='text-base' onClick={() => alert('heyy')}>Disconnect</button>
+                        <button className='text-base' onClick={() => handleDisconnect()}>Disconnect</button>
                     </li>
                 </ul>
             </div>

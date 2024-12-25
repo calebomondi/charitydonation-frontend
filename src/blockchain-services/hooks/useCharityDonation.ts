@@ -1,13 +1,14 @@
 import { 
   useWriteContract, 
+  useReadContract,
   useTransaction, 
   useWatchContractEvent,
   usePublicClient
 } from 'wagmi'
-import { parseEther, formatEther } from 'viem'
+import { parseEther, formatEther, decodeEventLog } from 'viem'
 import { useState } from 'react'
 
-import { CreateCampaignArgs, CampaignCreatedEvent } from "../../types";
+import { CreateCampaignArgs, CampaignCreatedEvent, CampaignDataArgs } from "../../types";
 
 import charityABI from "../abi/CharityDonation.json";
 
@@ -42,24 +43,41 @@ export function useCreateCampaign() {
     abi: charityABI.abi,
     eventName: 'CampaignCreated',
     onLogs(logs) {
-      // Parse the event data from the log topics and data
-      const log = logs[0]
-      if (!log || !log.topics || !log.data) return
-      
-      // Decode the event data using your contract ABI
-      const event = {
-        campaign_id: BigInt(log.topics[1] || '0'),
-        campaignAddress: log.topics[2] || '',
-        title: log.data, // You might need to decode this properly based on your ABI
-        targetAmount: BigInt(log.topics[3] || '0'),
-        deadline: BigInt(log.topics[4] || '0')
-      } as CampaignCreatedEvent
-      
-      setCampaignCreatedEvent(event)
-      setIsEventReceived(true)
-    },
-  })
+      if (!logs.length) return;
+  
+      try {
+        const log = logs[0]; // Assuming only one log is relevant here.
+  
+        // Decode the log data using viem
+        const decodedLog = decodeEventLog({
+          abi: charityABI.abi,
+          eventName: 'CampaignCreated',
+          data: log.data,
+          topics: log.topics,
+        });
 
+        if (!decodedLog || !decodedLog.args) {
+          throw new Error('Failed to decode log: args are undefined.');
+        }
+  
+        const event = {
+          campaign_id: Number(decodedLog.args[0]),
+          campaignAddress: decodedLog.args[1],
+          title: decodedLog.args[2],
+          targetAmount: formatEther(decodedLog.args[3] as bigint),
+          deadline: new Date(Number(decodedLog.args[4]) * 1000).toLocaleString(),
+        } as unknown as CampaignCreatedEvent;
+  
+        console.log('Decoded Event:', event);
+  
+        setCampaignCreatedEvent(event);
+        setIsEventReceived(true);
+      } catch (error) {
+        console.error('Error decoding event log:', error);
+      }
+    },
+  });
+  
   // Reset states
   const reset = () => {
     resetWrite?.()
@@ -79,7 +97,6 @@ export function useCreateCampaign() {
       title: campaignCreatedEvent.title,
       targetAmount: formatEther(campaignCreatedEvent.targetAmount),
       deadline: deadline.toLocaleString(),
-      deadlineTimestamp: Number(campaignCreatedEvent.deadline)
     }
   }
 
@@ -137,5 +154,23 @@ export function useCreateCampaign() {
     campaignData: getFormattedCampaignData(),
     reset,
     getTransactionReceipt
+  }
+}
+
+export function useViewCampaigns() {
+
+  const getCampaigns = async (): Promise<CampaignDataArgs[]> => {
+    const { data } = await useReadContract({
+      address: CONTRACT_ADDRESS,
+      abi: charityABI.abi,
+      functionName: 'viewCampaigns',
+      args: [],
+    })
+
+    return data as CampaignDataArgs[]
+  }
+
+  return {
+    getCampaigns
   }
 }

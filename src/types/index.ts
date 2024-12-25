@@ -12,3 +12,16 @@ export interface CampaignCreatedEvent {
     targetAmount: bigint
     deadline: bigint
 }
+
+export interface CampaignDataArgs {
+    campaignId: number
+    title: string
+    description: string
+    campaignAddress: string
+    targetAmount: bigint
+    raisedAmount: bigint
+    balance: bigint
+    deadline: string
+    isCompleted: boolean
+    isCancelled: boolean
+}

@@ -2,6 +2,7 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Home from '../Home/home';
 import Donate from '../donations/donate';
 import MyDonations from '../donations/mydonations';
+import MyFundraisers from '../fundraisers/myfundraisers';
 
 
 const AuthenticatedApp: React.FC = () => {
@@ -26,7 +27,7 @@ const AuthenticatedApp: React.FC = () => {
             />
             <Route
                 path="/my-fundraisers"
-                element={''}
+                element={<MyFundraisers />}
             />
         </Routes>
     );
