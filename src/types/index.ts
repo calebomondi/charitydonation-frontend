@@ -1,16 +1,16 @@
 export interface CreateCampaignArgs {
     title: string
     description: string
-    target: string // In ETH
-    durationDays: number
+    target: string
+    durationDays: string
 }
 
 export interface CampaignCreatedEvent {
-    campaign_id: bigint
+    campaign_id: number
     campaignAddress: string
     title: string
-    targetAmount: bigint
-    deadline: bigint
+    targetAmount: number
+    deadline: string
 }
 
 export interface CampaignDataArgs {

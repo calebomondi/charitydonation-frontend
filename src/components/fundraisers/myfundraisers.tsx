@@ -1,6 +1,7 @@
 import NavBar from "../navbar/navbar"
-import { CreateCampaignForm } from "./createform"
 import ViewMyCampaigns from "./viewmycampaigns";
+import CreateCampaignForm from "./createform";
+
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAccount } from "wagmi";
@@ -17,7 +18,7 @@ export default function MyFundraisers() {
 
   return (
     <main>
-        <NavBar />
+        <NavBar />        
         <CreateCampaignForm />
         <ViewMyCampaigns />
     </main>
