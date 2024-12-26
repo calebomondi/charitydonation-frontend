@@ -61,12 +61,15 @@ export function useCreateCampaign() {
 
   useWatchContractEvent({
     address: CONTRACT_ADDRESS,
-    abi,
+    abi: abi,
     eventName: 'CampaignCreated',
     onLogs(logs) {
+
       console.log('New logs!', JSON.stringify(logs))
-      if (!logs) {
+
+      if (!logs || logs.length === 0) {
         console.log('No logs')
+        return
       }
       const args = (logs[0] as unknown as { args: any }).args
       const { campaign_id, campaignAddress, title, targetAmount, deadline } = args
@@ -80,8 +83,6 @@ export function useCreateCampaign() {
         deadline: new Date(Number(deadline) * 1000).toLocaleDateString()
       })
     },
-    pollingInterval: 1000, // Poll every second
-    strict: true
   })
 
   const handleCreateCampaign = async ({title,description,target,durationDays} : CreateCampaignArgs) => {
