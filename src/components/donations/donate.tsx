@@ -1,5 +1,4 @@
 import NavBar from "../navbar/navbar"
-import BookDetails from "../bookdetails/BookDetails"
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAccount } from "wagmi";
@@ -18,7 +17,7 @@ export default function Donate() {
     <main>
       <NavBar />
       <div>
-        <BookDetails bookId={3}/>
+        oiiii!
       </div>
     </main>
   )

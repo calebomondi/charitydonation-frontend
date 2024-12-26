@@ -1,5 +1,5 @@
 import { useCreateCampaign } from '../../blockchain-services/hooks/useCharityDonation'
-import { useState, useEffect } from 'react'
+import {useState} from 'react'
 
 export function CreateCampaignForm() {
   const [formData, setFormData] = useState({
@@ -19,21 +19,6 @@ export function CreateCampaignForm() {
     campaignData,
     getTransactionReceipt
   } = useCreateCampaign()
-
-  const [receipt, setReceipt] = useState<any>(null)
-
-  useEffect(() => {
-    try {
-      const receipt = async () => {
-        if (transactionHash) {
-          setReceipt(await getTransactionReceipt())
-        }
-      }
-      receipt()
-    } catch (error) {
-      console.error('Failed to get transaction receipt:', error)
-    }
-  }, [isSuccess, transactionHash])
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target
@@ -144,7 +129,6 @@ export function CreateCampaignForm() {
       {isSuccess && (
         <div>
           <p>Transanction Hash : {transactionHash}</p>
-          <p>Transanction Receipt : {receipt}</p>
         </div>
       )}
     </div>

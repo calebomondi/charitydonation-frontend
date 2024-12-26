@@ -50,23 +50,20 @@ export function useCreateCampaign() {
         console.log('No logs received')
         return
       }
-
+      /*
       try {
-        // Assuming the first log contains our event data
         const log = logs[0]
-        const args = log.args
-
-        if (!args) {
+        if (!log.args) {
           console.error('No arguments found in event log')
           return
         }
 
         const event: CampaignCreatedEvent = {
-          campaign_id: args.campaign_id,
-          campaignAddress: args.campaignAddress,
-          title: args.title,
-          targetAmount: args.targetAmount,
-          deadline: args.deadline,
+          campaign_id: log.args.campaign_id,
+          campaignAddress: log.args.campaignAddress,
+          title: log.args.title,
+          targetAmount: log.args.targetAmount,
+          deadline: log.args.deadline,
         }
 
         console.log('Decoded Event:', event)
@@ -75,6 +72,7 @@ export function useCreateCampaign() {
       } catch (error) {
         console.error('Error decoding event log:', error)
       }
+        */
     },
     // Add these options to ensure proper event watching
     enabled: true,
